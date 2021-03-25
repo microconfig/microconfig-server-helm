@@ -1,0 +1,20 @@
+replicas: 1
+
+image:
+  repo: microconfig/microconfig-server
+  tag: 0.5.0
+
+serviceAccount: default
+
+ingress:
+  host: server.microconfig.io
+  class: nginx
+  tls:
+    enabled: false
+    secret: microconfig-tls
+
+# default values. override with your own
+config:
+  remote: https://github.com/microconfig/microconfig-quickstart.git
+  username: open
+  password: source

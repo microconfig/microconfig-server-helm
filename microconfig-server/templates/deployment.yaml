@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: {{.Values.replicas}}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{.Values.image.repo}}:{{.Values.image.tag}}"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: http
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+            failureThreshold: 1
+            httpGet:
+              path: /actuator/health
+              port: http
+          resources:
+            requests:
+              memory: 256Mi
+          env:
+          - name: REMOTE_URL                                                                                                                                                                                                                                                          │
+            valueFrom:                                                                                                                                                                                                                                                                │
+              secretKeyRef:                                                                                                                                                                                                                                                           │
+                key: remote                                                                                                                                                                                                                                                           │
+                name: microconfig-secret                                                                                                                                                                                                                                              │
+          - name: USERNAME                                                                                                                                                                                                                                                            │
+            valueFrom:                                                                                                                                                                                                                                                                │
+              secretKeyRef:                                                                                                                                                                                                                                                           │
+                key: username                                                                                                                                                                                                                                                         │
+                name: microconfig-secret                                                                                                                                                                                                                                              │
+          - name: PASSWORD                                                                                                                                                                                                                                                            │
+            valueFrom:                                                                                                                                                                                                                                                                │
+              secretKeyRef:                                                                                                                                                                                                                                                           │
+                key: password                                                                                                                                                                                                                                                         │
+                name: microconfig-secret
