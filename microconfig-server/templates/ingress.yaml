@@ -7,7 +7,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
 spec:
-  {{ if eq .Values.ingress.tls.enabled "true" }}
+  {{ if .Values.ingress.tls.enabled }}
   tls:
     - secretName: {{ .Values.ingress.tls.secret }}
       hosts:
