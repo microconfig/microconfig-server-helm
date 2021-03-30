@@ -1,7 +1,7 @@
 replicas: 1
 
 image:
-  repo: microconfig/microconfig-server
+  repo: microconfig/server
   tag: 0.5.0
 
 serviceAccount: default
